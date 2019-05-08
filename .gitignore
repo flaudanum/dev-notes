@@ -1,0 +1,5 @@
+# PDF redering
+*.pdf
+
+# VSC settings
+.vscode/*
