@@ -208,6 +208,9 @@ CREATE DATABASE data_base_name;
 
 | Command | Description |
 |---------|-------------|
+| `\?`  | List of `psql` meta-commands |
+| `\c` or `\connect` | Connect to new database |
+| `\d`  | List tables, views, and sequences |
 | `\du` | List the attributes of existing roles |
 | `\l`  | List existing databases |
 | `\q`  | Quit the CLI |
