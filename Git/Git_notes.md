@@ -11,7 +11,9 @@
     - [Create a new branch and change to that branch](#create-a-new-branch-and-change-to-that-branch)
     - [Create a new remote branch](#create-a-new-remote-branch)
     - [Remote branch merging](#remote-branch-merging)
-  - [Rebase a branch](#rebase-a-branch)
+    - [Rebase a branch](#rebase-a-branch)
+    - [Suppress a local branch](#suppress-a-local-branch)
+    - [Suppress a distant branch](#suppress-a-distant-branch)
   - [Working tree and staging area](#working-tree-and-staging-area)
     - [Revert the state of modified files in the working tree](#revert-the-state-of-modified-files-in-the-working-tree)
     - [Bring back files from the staging area](#bring-back-files-from-the-staging-area)
@@ -169,27 +171,26 @@ $ git push -u origin new_branch
 ```
 
 ### Remote branch merging
-First, move to the branch that will integrate the merge (*e.g.* *master*):
 
-```bash
+First, move to the branch that will integrate the merge (*e.g.* branch *master*):
+
+```
 $ git checkout master
-Switched to branch 'master'
-Your branch is up-to-date with 'origin/master'.
 ```
 
-Then merge the remote branch *origin/branch_name* within:
+Next merge the distant other branch into the current one (option `--squash` for squashing the commits before merging):
 
-```bash
-$ git merge origin/branch_name
+```
+$ git merge --squash origin/other-branch
 ```
 
-Then push to origin
+Solve the merge conflicts if any and eventually push the current branch to the remote repository:
 
-```bash
+```
 $ git push origin master
 ```
 
-## Rebase a branch
+### Rebase a branch
 
 First, keep the local repository up-to-date:
 
@@ -226,6 +227,37 @@ Or
 ```bash
 $ git pull
 $ git push
+```
+
+### Suppress a local branch
+
+Use `git branch -d`:
+```
+$ git branch -d local-branch-to-delete
+```
+If the branch is not merged, an error message occurs. Replacing -d by -D forces the deletion.
+
+### Suppress a distant branch
+
+A remote branch can be deleted using the syntax `git push <remote-name> :<branch-name>`:
+```
+$ git push origin :PostgreSQL
+```
+Remote branch `origin/PostgreSQL` is deleted
+
+An alternative command is:
+```
+$ git push remote-name --delete branch-name
+```
+or
+```
+$ git push remote-name -d branch-name
+```
+If the branch is not merged, an error message occurs. Replacing -d by -D forces the deletion.
+
+Example:
+```
+$ git push origin --delete PostgreSQL
 ```
 
 ## Working tree and staging area

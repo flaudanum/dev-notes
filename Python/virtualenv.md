@@ -1,3 +1,10 @@
+- [Virtual environments with `venv`](#virtual-environments-with-venv)
+  - [Create a new virtual environment](#create-a-new-virtual-environment)
+  - [Activate / Deactivate a virtual environment](#activate--deactivate-a-virtual-environment)
+- [Virtual environments with `virtualenvwrapper`](#virtual-environments-with-virtualenvwrapper)
+  - [Installation](#installation)
+  - [Usage](#usage)
+
 # Virtual environments with `venv`
 
 The module `venv` is part of the standard library of Python 3. However on Linux **Ubuntu** it is required to install a dedicated package:
