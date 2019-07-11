@@ -201,8 +201,9 @@ Next merge the distant other branch into the current one (option `--squash` for 
 $ git merge --squash origin/other-branch
 ```
 
-Solve the merge conflicts if any and eventually push the current branch to the remote repository:
+Solve the **merge conflicts** by editing the conflicting files and selecting the changes to keep. Next track the files with `git add` and make a commit for closing the conflict.
 
+Eventually push the current branch to the remote repository:
 ```
 $ git push origin master
 ```
