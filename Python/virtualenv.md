@@ -1,9 +1,12 @@
-- [Virtual environments with `venv`](#virtual-environments-with-venv)
-  - [Create a new virtual environment](#create-a-new-virtual-environment)
-  - [Activate / Deactivate a virtual environment](#activate--deactivate-a-virtual-environment)
-- [Virtual environments with `virtualenvwrapper`](#virtual-environments-with-virtualenvwrapper)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [Virtual environments with `venv`](#Virtual-environments-with-venv)
+  - [Create a new virtual environment](#Create-a-new-virtual-environment)
+  - [Activate / Deactivate a virtual environment](#Activate--Deactivate-a-virtual-environment)
+  - [Remove all installed packages](#Remove-all-installed-packages)
+  - [Removing a package and its dependencies](#Removing-a-package-and-its-dependencies)
+  - [Install a dependency from a Git repository](#Install-a-dependency-from-a-Git-repository)
+- [Virtual environments with `virtualenvwrapper`](#Virtual-environments-with-virtualenvwrapper)
+  - [Installation](#Installation)
+  - [Usage](#Usage)
 
 # Virtual environments with `venv`
 
@@ -61,6 +64,36 @@ Scripts `activate.bat` and `deactivate.bat` have been created on Windows:
 
 ```cmd
 $ my_virtual_env/bin/activate.bat
+```
+
+## Remove all installed packages
+
+For removing all packages installed with pip (from [StackOverflow](https://stackoverflow.com/questions/11248073/what-is-the-easiest-way-to-remove-all-packages-installed-by-pip)):
+```bash
+$ pip freeze | xargs pip uninstall -y
+```
+
+An alternative solution in two steps is:
+```bash
+$ pip freeze > requirements.txt
+$ pip uninstall -r requirements.txt -y
+```
+
+## Removing a package and its dependencies
+
+When removing a package with `pip` the dependencies of this package that are not used by any other package are not removed. This issue is addressed by the util [pip-autoremove](https://github.com/invl/pip-autoremove) that is available on **PyPi**.
+
+## Install a dependency from a Git repository
+
+Installing from a **remote** repository (e.g. *GitHub*, *GitLab*) with HTTP:
+```
+$ pip install -e git+https://path/to/the/remote/repository.git@the_selected_branch
+```
+The option `-e` may be added so that the dependency is editable.
+
+Installing from a **local** repository require the prefix `file://` which indicates the local file system::
+```
+$ pip install -e git+https://path/to/the/local/repository.git@the_selected_branch
 ```
 
 # Virtual environments with `virtualenvwrapper`
