@@ -1,23 +1,28 @@
 # Git notes
 
-- [Git notes](#git-notes)
-  - [Configuration](#configuration)
-  - [Clone repositories](#clone-repositories)
-    - [Clone a branch that is different from the default one](#clone-a-branch-that-is-different-from-the-default-one)
-  - [Export a local repository to GitLab or GitHub](#export-a-local-repository-to-gitlab-or-github)
-  - [Remote repository management](#remote-repository-management)
-    - [Set remote of a local repository](#set-remote-of-a-local-repository)
-  - [Branch management](#branch-management)
-    - [Create a new branch and change to that branch](#create-a-new-branch-and-change-to-that-branch)
-    - [Create a new remote branch](#create-a-new-remote-branch)
-    - [Remote branch merging](#remote-branch-merging)
-  - [Rebase a branch](#rebase-a-branch)
-  - [Working tree and staging area](#working-tree-and-staging-area)
-    - [Revert the state of modified files in the working tree](#revert-the-state-of-modified-files-in-the-working-tree)
-    - [Bring back files from the staging area](#bring-back-files-from-the-staging-area)
-    - [Discard every untracked modification](#discard-every-untracked-modification)
-    - [Stashing untracked modifications](#stashing-untracked-modifications)
-  - [Tagging](#tagging)
+- [Git notes](#Git-notes)
+  - [Configuration](#Configuration)
+  - [Clone repositories](#Clone-repositories)
+    - [Clone a branch that is different from the default one](#Clone-a-branch-that-is-different-from-the-default-one)
+  - [Export a local repository to GitLab or GitHub](#Export-a-local-repository-to-GitLab-or-GitHub)
+  - [Remote repository management](#Remote-repository-management)
+    - [Set remote of a local repository](#Set-remote-of-a-local-repository)
+  - [Branch management](#Branch-management)
+    - [Create a new branch and change to that branch](#Create-a-new-branch-and-change-to-that-branch)
+    - [Create a new remote branch](#Create-a-new-remote-branch)
+    - [Change to a new local branch tracking a remote one](#Change-to-a-new-local-branch-tracking-a-remote-one)
+    - [Remote branch merging](#Remote-branch-merging)
+    - [Rebase a branch](#Rebase-a-branch)
+    - [Suppress a local branch](#Suppress-a-local-branch)
+    - [Suppress a distant branch](#Suppress-a-distant-branch)
+  - [Working tree and staging area](#Working-tree-and-staging-area)
+    - [Revert the state of modified files in the working tree](#Revert-the-state-of-modified-files-in-the-working-tree)
+    - [Bring back files from the staging area](#Bring-back-files-from-the-staging-area)
+    - [Discard every untracked modification](#Discard-every-untracked-modification)
+    - [Stashing untracked modifications](#Stashing-untracked-modifications)
+  - [Tagging](#Tagging)
+  - [Edit the last commit](#Edit-the-last-commit)
+  - [List files changed between two commits](#List-files-changed-between-two-commits)
 
 
 ## Configuration
@@ -168,28 +173,42 @@ or
 $ git push -u origin new_branch
 ```
 
+### Change to a new local branch tracking a remote one
+
+First update information from the *remote*:
+
+```bash
+$ git fetch --all
+```
+
+It is needed to create a local branch that tracks a remote branch. The following command will create a *local branch* tracking a *remote branch* and change locally to the new *local branch*:
+
+```bash
+$ git checkout --track origin/daves_branch
+```
+
 ### Remote branch merging
-First, move to the branch that will integrate the merge (*e.g.* *master*):
 
-```bash
+First, move to the branch that will integrate the merge (*e.g.* branch *master*):
+
+```
 $ git checkout master
-Switched to branch 'master'
-Your branch is up-to-date with 'origin/master'.
 ```
 
-Then merge the remote branch *origin/branch_name* within:
+Next merge the distant other branch into the current one (option `--squash` for squashing the commits before merging):
 
-```bash
-$ git merge origin/branch_name
+```
+$ git merge --squash origin/other-branch
 ```
 
-Then push to origin
+Solve the **merge conflicts** by editing the conflicting files and selecting the changes to keep. Next track the files with `git add` and make a commit for closing the conflict.
 
-```bash
+Eventually push the current branch to the remote repository:
+```
 $ git push origin master
 ```
 
-## Rebase a branch
+### Rebase a branch
 
 First, keep the local repository up-to-date:
 
@@ -228,6 +247,37 @@ $ git pull
 $ git push
 ```
 
+### Suppress a local branch
+
+Use `git branch -d`:
+```
+$ git branch -d local-branch-to-delete
+```
+If the branch is not merged, an error message occurs. Replacing -d by -D forces the deletion.
+
+### Suppress a distant branch
+
+A remote branch can be deleted using the syntax `git push <remote-name> :<branch-name>`:
+```
+$ git push origin :PostgreSQL
+```
+Remote branch `origin/PostgreSQL` is deleted
+
+An alternative command is:
+```
+$ git push remote-name --delete branch-name
+```
+or
+```
+$ git push remote-name -d branch-name
+```
+If the branch is not merged, an error message occurs. Replacing -d by -D forces the deletion.
+
+Example:
+```
+$ git push origin --delete PostgreSQL
+```
+
 ## Working tree and staging area
 
 ### Revert the state of modified files in the working tree
@@ -262,12 +312,17 @@ git checkout -- .
 
 ### Stashing untracked modifications
 
-This operation is useful when changing the current branch while some modifications are not committed. Such an operation requires either to comit the modifications first or stash them. If committing is not the appropriate operation the modifications must be stashed. Stashes can be carried on fromn branch to branch. If multiple stashes are saved they are organized in *stack*.
+This operation is useful when changing the current branch while some modifications are not committed. Such an operation requires either to commit the modifications first or stash them. If committing is not the appropriate operation the modifications must be stashed. Stashes can be carried on from branch to branch. If multiple stashes are saved they are organized in *stack*.
 
 Saving a new stash and reverting to the state of the last commit (discarding every modification):
 ```
-$ git stash save "Comments describing the stash"
+$ git stash push -u -m "Comments describing the stash"
 ```
+For stashing directory contents recursively:
+```
+$ git stash push -u --all -m "Comments describing the stash"
+```
+The option `-u` (or `--include-untracked`) is necessary for stashing *untracked files*. Otherwise, files must be tracked first with `git add`.
 
 List the existing stashes:
 ```
@@ -327,3 +382,23 @@ Author: Frederic LAUDARIN <frederic.laudarin@supergrid-institute.com>
 Date:   Thu May 16 10:54:16 2019 +0200
 ...
 ```
+
+## Edit the last commit
+
+Suppose additional modifications must be added to the last commit. Edit files and add the modifications with `git add`. Next update the last commit with `git commit --amend`:
+```bash
+$ git commit --amend -m "New comment"
+```
+For keeping the comment of the last commit use instead:
+```bash
+$ git commit --amend --no-edit
+```
+
+## List files changed between two commits
+
+Use `git diff --name-only`.
+
+|  |  |
+|--|--|
+|Comparing a commit with the one `HEAD` is located | `git diff --name-only <commit hash>`|
+|Comparing two commits|`git diff --name-only <commit #ref hash> <commit #comp hash>`|
