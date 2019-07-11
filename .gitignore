@@ -1,5 +1,8 @@
-# PDF redering
+# Doc rendering
 *.pdf
+*.html
 
 # VSC settings
 .vscode/*
+
+*.db
