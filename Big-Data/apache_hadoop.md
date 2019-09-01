@@ -74,6 +74,32 @@ As described in the official documentation, edit configuration files:
 - `<HADOOP_HOME>/etc/hadoop/core-site.xml`
 - `<HADOOP_HOME>/etc/hadoop/hdfs-site.xml`
 
+### Setup SSH connection to `localhost`
+
+A SSH connection to localhost without passphrase is required. For creating a new SSH key:
+
+```bash
+$ ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+$ chmod 0600 ~/.ssh/authorized_keys
+```
+
+The SSH connection uses port 22 by default. This port might be closed. For opening the port edit file `/etc/ssh/sshd_config` with priviledge then uncomment or add the acces to port 22:
+
+```conf
+# If you want to change the port on a SELinux system, you have to tell
+# SELinux about this change.
+# semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
+#
+Port 22
+```
+
+Eventually restart the SSH service:
+
+```
+$ systemctl restart sshd
+```
+
 ###  1.4. <a name='Bashsetup'></a>Bash setup
 
 Add the following lines:
@@ -122,30 +148,38 @@ Browse the web interface for the *NameNode*; by default it is available at `http
 ###  2.1. <a name='Makeanewdirectory'></a>Make a new directory
 
 ```
-hdfs dfs -mkdir <path of the directory>
+$ hdfs dfs -mkdir <path of the directory>
 ```
 
 The standard HDFS directories required to execute MapReduce jobs are:
 
 ```
-bin/hdfs dfs -mkdir /user
-bin/hdfs dfs -mkdir /user/<username>
+$ hdfs dfs -mkdir /user
+$ hdfs dfs -mkdir /user/flaudanum
+$ hdfs dfs -mkdir /user/flaudanum/input
 ```
 
 ###  2.2. <a name='SenddatatotheHDFS'></a>Send data to the HDFS
 
 ```
-hdfs dfs -put etc/hadoop input_file
+hdfs dfs -put path/to/data /user/flaudanum/input
 ```
+
+The data `path/to/data` can be either a file or a folder. The data can be removed from the hadoop file system the command `hdfs dfs -rm` for files and `hdfs dfs -rm -r` for removing a folder.
 
 ###  2.3. <a name='MisccommandsforHDFSoperations'></a>Misc commands for HDFS operations
 
-The command are provided as options of the HDFS CLI with command `hdfs dfs` or `hadoop fs`. Reference to the commands are available with the `-help` option or [here](https://www.tutorialspoint.com/hadoop/hadoop_command_reference.htm).
+The command are provided as options of the HDFS CLI with command `hdfs dfs` or `hadoop fs`. Reference to the commands are available with the `-help` option.
 
 | Command   | Description | Example  |
 |-----------|-------------|----------|
 | `-ls`     | List path. The minimal path is `/` for there is no concept of current path.  | `hdfs dfs -ls /user` |
 | `-cat`    | Concatenate files and print on the standard output | `hadoop fs -cat /user/flaudanum/output/part-r-00000` |
+
+Here are some websites providing some reference material:
+
+* [data-flair.training](https://data-flair.training/blogs/top-hadoop-hdfs-commands-tutorial/)
+* [tutorialspoint.com](https://www.tutorialspoint.com/hadoop/hadoop_command_reference.htm)
 
 ##  3. <a name='RunanMapreducejob'></a>Run an Mapreduce job
 
