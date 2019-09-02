@@ -2,13 +2,13 @@
 
 Angular is named after the *angular brackets* of HTML. The command **ng** very likely stands from *aNGular*.
 
-- [Angular CLI notes](#angular-cli-notes)
-  - [Installation of the Angular CLI](#installation-of-the-angular-cli)
-  - [Create a new application project](#create-a-new-application-project)
-  - [Run the application on local server in *dev mode*](#run-the-application-on-local-server-in-dev-mode)
-  - [Run the application on local server in production](#run-the-application-on-local-server-in-production)
-  - [Generate a new component in the application](#generate-a-new-component-in-the-application)
-  - [Generate a new service in the application](#generate-a-new-service-in-the-application)
+- [Angular CLI notes](#Angular-CLI-notes)
+  - [Installation of the Angular CLI](#Installation-of-the-Angular-CLI)
+  - [Create a new application project](#Create-a-new-application-project)
+  - [Run the application on local server in *dev mode*](#Run-the-application-on-local-server-in-dev-mode)
+  - [Run the application on local server in production](#Run-the-application-on-local-server-in-production)
+  - [Generate a new component in the application](#Generate-a-new-component-in-the-application)
+  - [Generate a new service in the application](#Generate-a-new-service-in-the-application)
 
 
 ## Installation of the Angular CLI

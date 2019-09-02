@@ -1,28 +1,29 @@
 # Git notes
 
-- [Git notes](#Git-notes)
-  - [Configuration](#Configuration)
-  - [Clone repositories](#Clone-repositories)
-    - [Clone a branch that is different from the default one](#Clone-a-branch-that-is-different-from-the-default-one)
-  - [Export a local repository to GitLab or GitHub](#Export-a-local-repository-to-GitLab-or-GitHub)
-  - [Remote repository management](#Remote-repository-management)
-    - [Set remote of a local repository](#Set-remote-of-a-local-repository)
-  - [Branch management](#Branch-management)
-    - [Create a new branch and change to that branch](#Create-a-new-branch-and-change-to-that-branch)
-    - [Create a new remote branch](#Create-a-new-remote-branch)
-    - [Change to a new local branch tracking a remote one](#Change-to-a-new-local-branch-tracking-a-remote-one)
-    - [Remote branch merging](#Remote-branch-merging)
-    - [Rebase a branch](#Rebase-a-branch)
-    - [Suppress a local branch](#Suppress-a-local-branch)
-    - [Suppress a distant branch](#Suppress-a-distant-branch)
-  - [Working tree and staging area](#Working-tree-and-staging-area)
-    - [Revert the state of modified files in the working tree](#Revert-the-state-of-modified-files-in-the-working-tree)
-    - [Bring back files from the staging area](#Bring-back-files-from-the-staging-area)
-    - [Discard every untracked modification](#Discard-every-untracked-modification)
-    - [Stashing untracked modifications](#Stashing-untracked-modifications)
-  - [Tagging](#Tagging)
-  - [Edit the last commit](#Edit-the-last-commit)
-  - [List files changed between two commits](#List-files-changed-between-two-commits)
+- [Git notes](#git-notes)
+  - [Configuration](#configuration)
+  - [Clone repositories](#clone-repositories)
+    - [Clone a branch that is different from the default one](#clone-a-branch-that-is-different-from-the-default-one)
+  - [Export a local repository to GitLab or GitHub](#export-a-local-repository-to-gitlab-or-github)
+  - [Remote repository management](#remote-repository-management)
+    - [Set remote of a local repository](#set-remote-of-a-local-repository)
+  - [Branch management](#branch-management)
+    - [Create a new branch and change to that branch](#create-a-new-branch-and-change-to-that-branch)
+    - [Create a new remote branch](#create-a-new-remote-branch)
+    - [Change to a new local branch tracking a remote one](#change-to-a-new-local-branch-tracking-a-remote-one)
+    - [Remote branch merging](#remote-branch-merging)
+    - [Rebase a branch](#rebase-a-branch)
+    - [Solve merge conflicts](#solve-merge-conflicts)
+    - [Suppress a local branch](#suppress-a-local-branch)
+    - [Suppress a distant branch](#suppress-a-distant-branch)
+  - [Working tree and staging area](#working-tree-and-staging-area)
+    - [Revert the state of modified files in the working tree](#revert-the-state-of-modified-files-in-the-working-tree)
+    - [Bring back files from the staging area](#bring-back-files-from-the-staging-area)
+    - [Discard every untracked modification](#discard-every-untracked-modification)
+    - [Stashing untracked modifications](#stashing-untracked-modifications)
+  - [Tagging](#tagging)
+  - [Edit the last commit](#edit-the-last-commit)
+  - [List files changed between two commits](#list-files-changed-between-two-commits)
 
 
 ## Configuration
@@ -247,6 +248,41 @@ $ git pull
 $ git push
 ```
 
+### Solve merge conflicts
+
+Merge conflicts are solved with the command `git mergetool`. A specific tool may be specified with the `--tool` option. For instance the following code uses `tkdiff`:
+```
+git mergetool --tool=tkdiff
+```
+
+The merge tool shows the conflict area in each file sequentially. Suppose the file `transformer.py` has a conflict, the conflict area is divided in two parts:
+```python
+<<<<<<< HEAD:old/path/to/transformer.py
+
+# Code from the base branch
+
+=======
+
+# Code from the merging branch
+
+>>>>>>> origin/merged_branch:new/path/to/transformer.py
+```
+
+Each file must be edited and saved to validate its final state. In the end the delimitation lines with symbols `>`, `=` and `<` must have been removed. 
+Once the modification are saved, the *mergetool* must be closed. It will automatically open the next conflicting file.
+
+In case a file was removed in the merging branch then it is asked if the original file must be kept. Answering `m` keeps the file and `k` validate the removal.
+```
+Deleted merge conflict for 'path/to/deleted/file.py':
+  {local}: modified file
+  {remote}: deleted
+Use (m)odified or (d)eleted file, or (a)bort?
+```
+
+Once the conflicts have been solved the merging process is pursued by typing `git merge --continue` (or `git rebase --continue` if rebasing).
+
+It is possible to reset the merging process with the command `git merge --abort` (or `git rebase --abort` if rebasing).
+
 ### Suppress a local branch
 
 Use `git branch -d`:
@@ -393,6 +429,13 @@ For keeping the comment of the last commit use instead:
 ```bash
 $ git commit --amend --no-edit
 ```
+
+If the commit was pushed to the remote repository before being amended then Git security will prevent from pushing the last changes. Actually the remote commit and the local amended one are considered on different branches as the local branch and the remote one diverge. A `git pull` is required first, it will merge the last commit on the remote in the last local commit of the branch.
+```
+$ git pull
+Merge made by the 'recursive' strategy.
+```
+Eventually make a `git push` for updating the remote.
 
 ## List files changed between two commits
 
