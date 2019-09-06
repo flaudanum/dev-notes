@@ -1,11 +1,11 @@
 # Node Package manager notes
 
-- [Node Package manager notes](#Node-Package-manager-notes)
-  - [Install / update packages](#Install--update-packages)
-    - [Update npm](#Update-npm)
-    - [Upgrade every package](#Upgrade-every-package)
-  - [Getting the version of an installed package](#Getting-the-version-of-an-installed-package)
-  - [Information about version of an available package](#Information-about-version-of-an-available-package)
+- [Node Package manager notes](#node-package-manager-notes)
+  - [Install / update packages](#install--update-packages)
+    - [Update npm](#update-npm)
+    - [Upgrade every package](#upgrade-every-package)
+  - [Getting the version of an installed package](#getting-the-version-of-an-installed-package)
+  - [Information about version of an available package](#information-about-version-of-an-available-package)
 
 ## Install / update packages
 

@@ -419,6 +419,11 @@ Date:   Thu May 16 10:54:16 2019 +0200
 ...
 ```
 
+Pushing the tags to the remote repository requires the option `--tags`:
+```
+$ git push --tags
+```
+
 ## Edit the last commit
 
 Suppose additional modifications must be added to the last commit. Edit files and add the modifications with `git add`. Next update the last commit with `git commit --amend`:
