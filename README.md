@@ -1,1 +1,1 @@
-My dev notes and cheat sheets written with *Markdown*.
+My dev/admin notes and cheat sheets.
