@@ -7,6 +7,7 @@
   - [Export a local repository to GitLab or GitHub](#export-a-local-repository-to-gitlab-or-github)
   - [Remote repository management](#remote-repository-management)
     - [Set remote of a local repository](#set-remote-of-a-local-repository)
+  - [Revert to a previous commit](#revert-to-a-previous-commit)
   - [Branch management](#branch-management)
     - [Create a new branch and change to that branch](#create-a-new-branch-and-change-to-that-branch)
     - [Create a new remote branch](#create-a-new-remote-branch)
@@ -30,14 +31,14 @@
 
 List configuration:
 
-```bash
+```
 git config --list
 ```
 
 Set the global settings for properties *user* and *email*:
-```bash
+```
 git config --global user.name "Frédéric LAUDARIN"
-git config --global user.email "frederic.laudarin@supergrid-institute.com"
+git config --global user.email "friedrich.laudanum@my-email.com"
 ```
 
 
@@ -47,7 +48,7 @@ git config --global user.email "frederic.laudarin@supergrid-institute.com"
 
 For cloning the branch `my_branch` of the repository at location `<repo location>` (path or URL) that is different from the default one (remote HEAD) use command `git clone` with option `--branch`:
 
-```bash
+```
 $> git clone <repo location> --branch my_branch
 ```
 
@@ -56,11 +57,11 @@ $> git clone <repo location> --branch my_branch
 Create the new project on the server so that there is active URL for HTTP or SSH connection.
 Change to the directory of the local repository. If it is not a repository yet then use `git init`.
 Add a remote to the repository:
-```bash
+```
 git add remote origin <URL of the remote>
 ```
 Checkout the branch *master*. Check that the remote was properly added with `git remote -v`. Now push to the branch *master* with the option `--set-upstream` (or `-u`) for creating the new distant branch:
-```bash
+```
 git push --set-upstream origin master
 ```
 
@@ -69,25 +70,25 @@ git push --set-upstream origin master
 ### Set remote of a local repository
 
 Add a new remote origin
-```bash
+```
 $ git remote add origin <URL of the repo>
 ```
 
 Change the remote origin:
-```bash
+```
 $ git remote rm origin
 $ git remote add origin <URL of the repo>
 ```
 
 For specifying a new *remote* use command `git push --set-upstream` (or `git push -u`):
 
-```bash
+```
 $ git push --set-upstream <path to repository>
 ```
 
 This command pushes the active branch. For pushing branch add option `--all`. If the remote repository does not exist, it may be created by the hosting server (GitLab, GitHub) by specifying a new target branch.
 
-```bash
+```
 $ git push --set-upstream <path to repository> <new target branch>
 ```
 
@@ -95,8 +96,8 @@ $ git push --set-upstream <path to repository> <new target branch>
 
 **Example**
 
-```bash
-$ git push --set-upstream http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git master
+```
+$ git push --set-upstream http://gitlab.my-company.com/flaudanum/web-app-proto.git master
 
 Enumerating objects: 57, done.
 Counting objects: 100% (57/57), done.
@@ -105,38 +106,45 @@ Compressing objects: 100% (55/55), done.
 Writing objects: 100% (57/57), 108.05 KiB | 2.77 MiB/s, done.
 Total 57 (delta 9), reused 0 (delta 0)
 remote:
-remote: The private project flaudarin/tea-web-app-proto was successfully created.
+remote: The private project flaudanum/web-app-proto was successfully created.
 remote:
 remote: To configure the remote, run:
-remote:   git remote add origin http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git
+remote:   git remote add origin http://gitlab.my-company.com/flaudanum/web-app-proto.git
 remote:
 remote: To view the project, visit:
-remote:   http://gitlab.supergrid.com/flaudarin/tea-web-app-proto
+remote:   http://gitlab.my-company.com/flaudanum/web-app-proto
 remote:
-To http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git
+To http://gitlab.my-company.com/flaudanum/web-app-proto.git
  * [new branch]      master -> master
-Branch 'master' set up to track remote branch 'master' from 'http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git'.
+Branch 'master' set up to track remote branch 'master' from 'http://gitlab.my-company.com/flaudanum/web-app-proto.git'.
 ```
 
 This operation does not set the remote of the local repository. As indicated use command `git remote add` for that purpose.
 
-```bash
+```
 $ git remote -v
 
-$ git remote add origin http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git
+$ git remote add origin http://gitlab.my-company.com/flaudanum/web-app-proto.git
 
 $ git remote -v
 
-origin  http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git (fetch)
-origin  http://gitlab.supergrid.com/flaudarin/tea-web-app-proto.git (push)
+origin  http://gitlab.my-company.com/flaudanum/web-app-proto.git (fetch)
+origin  http://gitlab.my-company.com/flaudanum/web-app-proto.git (push)
 ```
 
 Eventually synchronize with `git fetch`:
 
-```bash
+```
 $ git fetch
-From http://gitlab.supergrid.com/flaudarin/tea-web-app-proto
+From http://gitlab.my-company.com/flaudanum/web-app-proto
  * branch            master     -> FETCH_HEAD
+```
+
+## Revert to a previous commit
+
+This operation can be performed with `git reset`. Use option `--soft` to keep changed files in the working tree or `--hard` to erase every changes.
+```
+$ git reset --soft <commit>
 ```
 
 ## Branch management
@@ -145,19 +153,19 @@ From http://gitlab.supergrid.com/flaudarin/tea-web-app-proto
 
 Creating a new branch *new_branch* without changing to that branch:
 
-```bash
+```
 $ git branch new_branch
 ```
 
 It is then possible to move the pointer HEAD to the new branch:
 
-```bash
+```
 $ git checkout new_branch
 ```
 
 Doing both at once:
 
-```bash
+```
 $ git checkout -b python3_migration
 Switched to a new branch 'python3_migration'
 ```
@@ -166,11 +174,11 @@ Switched to a new branch 'python3_migration'
 
 If a remote branch does not exist it is possible to create it with `git push` and the option `--set-upstream` (or `-u`):
 
-```bash
+```
 $ git push --set-upstream origin new_branch
 ```
 or
-```bash
+```
 $ git push -u origin new_branch
 ```
 
@@ -178,13 +186,13 @@ $ git push -u origin new_branch
 
 First update information from the *remote*:
 
-```bash
+```
 $ git fetch --all
 ```
 
 It is needed to create a local branch that tracks a remote branch. The following command will create a *local branch* tracking a *remote branch* and change locally to the new *local branch*:
 
-```bash
+```
 $ git checkout --track origin/daves_branch
 ```
 
@@ -213,37 +221,37 @@ $ git push origin master
 
 First, keep the local repository up-to-date:
 
-```bash
+```
 $ git fetch origin
 ```
 
 Start rebasing *remote_branch* (*e.g.* origin/remote_branch_name) on *local_branch*. If *local_branch* is not specified then it is the *current branch*:
 
-```bash
+```
 $ git rebase remote_branch local_branch
 ```
 
 Resolve conflict with a text editor, then:
 
-```bash
+```
 $ git rebase --continue
 ```
 
 Remove extra files (e.g. *.orig) created by diff tool:
 
-```bash
+```
 $ git clean -i
 ```
 
 Update the remote branch while bypassing the fast-forward rule:
 
-```bash
+```
 $ git push --force-with-lease
 ```
 
 Or
 
-```bash
+```
 $ git pull
 $ git push
 ```
@@ -320,13 +328,13 @@ $ git push origin --delete PostgreSQL
 
 For discarding changes in all *unstaged files* in current working directory use:
 
-```bash
+```
 $ git checkout -- .
 ```
 
 For a specific file use:
 
-```bash
+```
 git checkout -- path/to/file/to/revert
 ```
 
@@ -336,7 +344,7 @@ git checkout -- path/to/file/to/revert
 
 The specified staged file (or files) is brought back to the state of modified file in the working tree.
 
-```bash
+```
 $ git reset /path/to/the/file
 ```
 
@@ -390,12 +398,12 @@ git stash clear
 ## Tagging
 
 List existing tags:
-```bash
+```
 git tag
 ```
 
 Create an *annotated tag* (tag with a comment):
-```bash
+```
 git tag -a <label of the tag> -m "Comment describing the tag" [hash of the commit to tag]
 ```
 If the hash is omitted then the last commit is tagged.
@@ -408,30 +416,31 @@ $ git tag
 v0.0
 $ git show v0.0
 tag v0.0
-Tagger: Frederic LAUDARIN <frederic.laudarin@supergrid-institute.com>
+Tagger: Friedrich LAUDANUM <friedrich.laudanum@my-email.com>
 Date:   Thu May 16 11:08:38 2019 +0200
 
 Initial structure of the database
 
 commit 7056acff5737cdbd1cf53a927b3062e69afd832b (HEAD -> master, tag: v0.0)
-Author: Frederic LAUDARIN <frederic.laudarin@supergrid-institute.com>
+Author: Friedrich LAUDANUM <friedrich.laudanum@my-email.com>
 Date:   Thu May 16 10:54:16 2019 +0200
 ...
 ```
 
-Pushing the tags to the remote repository requires the option `--tags`:
+Pushing the tags to the remote repository with option `--tags`:
 ```
 $ git push --tags
 ```
+Beware, this command only pushes tags not commits.
 
 ## Edit the last commit
 
 Suppose additional modifications must be added to the last commit. Edit files and add the modifications with `git add`. Next update the last commit with `git commit --amend`:
-```bash
+```
 $ git commit --amend -m "New comment"
 ```
 For keeping the comment of the last commit use instead:
-```bash
+```
 $ git commit --amend --no-edit
 ```
 
