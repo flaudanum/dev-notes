@@ -1,12 +1,12 @@
-- [Virtual environments with `venv`](#Virtual-environments-with-venv)
-  - [Create a new virtual environment](#Create-a-new-virtual-environment)
-  - [Activate / Deactivate a virtual environment](#Activate--Deactivate-a-virtual-environment)
-  - [Remove all installed packages](#Remove-all-installed-packages)
-  - [Removing a package and its dependencies](#Removing-a-package-and-its-dependencies)
-  - [Install a dependency from a Git repository](#Install-a-dependency-from-a-Git-repository)
-- [Virtual environments with `virtualenvwrapper`](#Virtual-environments-with-virtualenvwrapper)
-  - [Installation](#Installation)
-  - [Usage](#Usage)
+- [Virtual environments with `venv`](#virtual-environments-with-venv)
+  - [Create a new virtual environment](#create-a-new-virtual-environment)
+  - [Activate / Deactivate a virtual environment](#activate--deactivate-a-virtual-environment)
+  - [Remove all installed packages](#remove-all-installed-packages)
+  - [Removing a package and its dependencies](#removing-a-package-and-its-dependencies)
+  - [Install a dependency from a Git repository](#install-a-dependency-from-a-git-repository)
+- [Virtual environments with `virtualenvwrapper`](#virtual-environments-with-virtualenvwrapper)
+  - [Installation](#installation)
+  - [Usage](#usage)
 
 # Virtual environments with `venv`
 
@@ -90,6 +90,11 @@ Installing from a **remote** repository (e.g. *GitHub*, *GitLab*) with HTTP:
 $ pip install -e git+https://path/to/the/remote/repository.git@the_selected_branch
 ```
 The option `-e` may be added so that the dependency is editable.
+
+Replace the branch name by a **commit** SHA-1 for the installation from a specific commit:
+```
+$ pip install git+http://path/to/the/remote/repository.git@0db9a104a854ff65583a4000a850a80461807f2c
+```
 
 Installing from a **local** repository require the prefix `file://` which indicates the local file system::
 ```
