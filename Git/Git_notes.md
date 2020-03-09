@@ -1,3 +1,16 @@
+<style>
+h1 {
+  text-decoration: underline overline;
+  color: #b52727;
+  font-size: 3em;
+}
+h2 {
+  color: #d82c2c;
+}
+h3 {
+  color: #de4e4e;
+}
+</style>
 # Git notes
 
 - [Git notes](#git-notes)
@@ -8,10 +21,12 @@
   - [Remote repository management](#remote-repository-management)
     - [Set remote of a local repository](#set-remote-of-a-local-repository)
   - [Revert to a previous commit](#revert-to-a-previous-commit)
+  - [Reset last commit](#reset-last-commit)
   - [Branch management](#branch-management)
     - [Create a new branch and change to that branch](#create-a-new-branch-and-change-to-that-branch)
     - [Create a new remote branch](#create-a-new-remote-branch)
     - [Change to a new local branch tracking a remote one](#change-to-a-new-local-branch-tracking-a-remote-one)
+    - [Finding what branch a git commit came from](#finding-what-branch-a-git-commit-came-from)
     - [Remote branch merging](#remote-branch-merging)
     - [Rebase a branch](#rebase-a-branch)
     - [Solve merge conflicts](#solve-merge-conflicts)
@@ -23,8 +38,13 @@
     - [Discard every untracked modification](#discard-every-untracked-modification)
     - [Stashing untracked modifications](#stashing-untracked-modifications)
   - [Tagging](#tagging)
+    - [Create a new tag](#create-a-new-tag)
+    - [Push local tags to origin](#push-local-tags-to-origin)
+    - [Remove a tag](#remove-a-tag)
   - [Edit the last commit](#edit-the-last-commit)
-  - [List files changed between two commits](#list-files-changed-between-two-commits)
+  - [Analyze changes between commits](#analyze-changes-between-commits)
+    - [List files changed between two commits](#list-files-changed-between-two-commits)
+    - [Modification of a file](#modification-of-a-file)
 
 
 ## Configuration
@@ -147,6 +167,17 @@ This operation can be performed with `git reset`. Use option `--soft` to keep ch
 $ git reset --soft <commit>
 ```
 
+## Reset last commit
+The last commit is undone and the associated changes are tracked.
+```
+$ git reset --soft "HEAD^"
+```
+This can be used to merge the last commit with the previous:
+```
+$ git reset --soft "HEAD^"
+$ git commit --amend
+```
+
 ## Branch management
 
 ### Create a new branch and change to that branch
@@ -194,6 +225,12 @@ It is needed to create a local branch that tracks a remote branch. The following
 
 ```
 $ git checkout --track origin/daves_branch
+```
+
+### Finding what branch a git commit came from
+
+```
+$ git branch --contains <commit hash>
 ```
 
 ### Remote branch merging
@@ -288,6 +325,25 @@ Use (m)odified or (d)eleted file, or (a)bort?
 ```
 
 Once the conflicts have been solved the merging process is pursued by typing `git merge --continue` (or `git rebase --continue` if rebasing).
+
+Next remove extra files (e.g. *.orig) created by diff tool:
+
+```
+$ git clean -i
+```
+
+Update the remote branch while bypassing the fast-forward rule:
+
+```
+$ git push --force-with-lease
+```
+
+Or
+
+```
+$ git pull
+$ git push
+```
 
 It is possible to reset the merging process with the command `git merge --abort` (or `git rebase --abort` if rebasing).
 
@@ -397,6 +453,7 @@ git stash clear
 
 ## Tagging
 
+### Create a new tag
 List existing tags:
 ```
 git tag
@@ -427,11 +484,29 @@ Date:   Thu May 16 10:54:16 2019 +0200
 ...
 ```
 
+### Push local tags to origin
+
 Pushing the tags to the remote repository with option `--tags`:
 ```
 $ git push --tags
 ```
-Beware, this command only pushes tags not commits.
+**Beware**:
+
+* This command only pushes tags not commits.
+* Do not push tags associated to commits that are not pushed
+
+In the second situation, follow these steps:
+
+* Remove the tag in the local branch (`git tag --delete`)
+* Remove the tag in the remote branch (e.g. with GitLab's UI)
+* re-push the tags
+
+And Robert's your father's brother.
+
+### Remove a tag
+```
+$ git tag --delete <tag name>
+```
 
 ## Edit the last commit
 
@@ -451,7 +526,9 @@ Merge made by the 'recursive' strategy.
 ```
 Eventually make a `git push` for updating the remote.
 
-## List files changed between two commits
+## Analyze changes between commits
+
+### List files changed between two commits
 
 Use `git diff --name-only`.
 
@@ -459,3 +536,20 @@ Use `git diff --name-only`.
 |--|--|
 |Comparing a commit with the one `HEAD` is located | `git diff --name-only <commit hash>`|
 |Comparing two commits|`git diff --name-only <commit #ref hash> <commit #comp hash>`|
+
+### Modification of a file
+
+For viewing the modification of a file between two commits, specify the commits' hashes followed by the file path. <i style="color:grey">What about a file which path has been modified between the commits?</i>
+```
+git diff --name-only <commit #ref hash> <commit #comp hash> /path/to/the/file
+```
+
+The code of the modified parts are indicated as follows:
+
+<span style="color:green"><tt>+ code from commit #comp</tt></span><br/>
+<span style="color:red"><tt>- code from commit #ref</tt></span><br/>
+
+Example:
+```
+$ git diff c34076e 0d477d4 my_app/controller/data_reader.py
+```

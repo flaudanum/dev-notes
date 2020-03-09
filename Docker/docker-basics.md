@@ -1,11 +1,12 @@
-# Docker basics
+# Docker notes
 
-- [Docker basics](#docker-basics)
+- [Docker notes](#docker-notes)
   - [Install Docker desktop](#install-docker-desktop)
   - [Basic operations](#basic-operations)
     - [Run a container](#run-a-container)
     - [Redirect a port](#redirect-a-port)
-    - [Enter inside a container](#enter-inside-a-container)
+    - [Bash inside a running container](#bash-inside-a-running-container)
+    - [Run an image and Bash inside by overwriting the entry point](#run-an-image-and-bash-inside-by-overwriting-the-entry-point)
     - [Stop a container](#stop-a-container)
     - [Remove containers, images and build cache](#remove-containers-images-and-build-cache)
     - [List the local containers](#list-the-local-containers)
@@ -18,6 +19,9 @@
     - [EXPOSE](#expose)
     - [VOLUME](#volume)
     - [CMD](#cmd)
+    - [COPY vs ADD](#copy-vs-add)
+  - [Issues](#issues)
+    - [No time sync](#no-time-sync)
 
 ## Install Docker desktop
 
@@ -74,10 +78,11 @@ A port of the host machine may be redirected to a port of the container. This ca
 ```
 Option `-d` stands for detach so that the container is run by a daemon process. Option `-p` redirects port 8080 to port 80.
 
-### Enter inside a container
+### Bash inside a running container
 
-When running a container the the hash of the container is printed:
+When running a container the hash of the container is printed:
 <pre class="hljs"><code><div>>Digest: sha256:<span style="color:#33ce58">451ce787d12369c5df2a32c85e5a03d52cbcef6eb3586dd03075f3034f10adcd</span></div></code></pre>
+or get short hash from `docker ps`.
 
 The container can be explored with a fully functional `bash`:
 
@@ -85,6 +90,12 @@ The container can be explored with a fully functional `bash`:
 root@886e1dee4699:/#</div></code></pre>
 
 `-t`, `--tty`  allocates a pseudo-TTY. `-i` keeps STDIN open even if not attached.
+
+### Run an image and Bash inside by overwriting the entry point
+Get the short hash of the image with `docker image ls`. Create a new container by specifying `bash` command as entry point with the option `--entrypoint`.
+```
+docker run -it --entrypoint bash 87a38b0c6e60
+```
 
 ### Stop a container
 
@@ -194,3 +205,32 @@ CMD command param1 param2
 ```
 When used in the shell format, the `CMD` instruction sets the command to be executed when running the image. In the shell form, the <command> will execute in `/bin/sh -c`.
 
+### COPY vs ADD
+
+(From a blog at [takacsmark.com](https://takacsmark.com/dockerfile-tutorial-by-example-dockerfile-best-practices-2018/))
+
+Both `ADD` and `COPY` are designed to add directories and files to your Docker image in the form of `ADD <src>... <dest>` or `COPY <src>... <dest>`. Most resources, including myself, suggest to use `COPY`.
+
+The reason behind this is that `ADD` has extra features compared to `COPY` that make `ADD` more unpredictable and a bit over-designed. `ADD` can pull files from url sources, which `COPY` cannot. `ADD` can also extract compressed files assuming it can recognize and handle the format. You cannot extract archives with `COPY`.
+
+The `ADD` instruction was added to Docker first, and `COPY` was added later to provide a straightforward, rock solid solution for copying files and directories into your container’s file system.
+
+If you want to pull files from the web into your image I would suggest to use `RUN` and `curl` and uncompress your files with `RUN` and commands you would use on the command line.
+
+
+## Issues
+<style>
+  .issue_section {
+    text-decoration: underline;
+    font-weight: 700;
+  }
+</style>
+
+### No time sync
+<span class="issue_section">Description:</span><br/>
+This issue may happen with Linux containers on Windows. When running a container the time is not synchronized with the host.
+
+See the [open issue](https://github.com/docker/for-win/issues/5803) at GitHub Docker's repository.
+
+<span class="issue_section">Solution:</span><br/>
+Restart *Docker desktop*. This issue should be corrected soon (now: 03-09-2020).
