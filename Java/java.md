@@ -6,6 +6,44 @@ Package `java.lang` provides classes that are fundamental to the design of the J
 
 Official [reference at Oracle](https://docs.oracle.com/javase/8/docs/api/index.html).
 
+## Compilation
+
+```
+javac -d .\out .\src\com\my-domain\my-project\*.java
+```
+
+## Java Archives
+
+### Create a JAR file
+Suppose the compilation output has been redirected to directory `out\` abd the manifest-change file `MANIFEST.MF` is in the root path.
+```
+src\
+|_ com\my-domain\my-app\
+   |- *.java
+out\
+|_ com\my-domain\my-app\
+   |- *.class
+MANIFEST.MF
+```
+The content of `MANIFEST.MF` is:
+```ini
+Manifest-Version: 1.0
+Main-Class: com.my-domain.my-app.App
+```
+
+Change to `out\` then create the JAR with the `jar` command:
+```
+> jar cfm ..\my-app.jar ..\MANIFEST.MF com\my-domain\my-app\*.class
+```
+
+Here the main class is `App` in `App.java`. This class must have an *entry point* that is the method with signature `public static void main(String[] args)`.
+
+### Read the content of a JAR file
+
+```
+> jar tf archive.jar
+```
+
 
 # Glossary
 
