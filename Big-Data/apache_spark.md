@@ -57,6 +57,20 @@ When using *python3*, *PyCharm* must be started from the terminal and the enviro
 
 The Spark's python API reference is available at [https://spark.apache.org/docs/latest/api/python/index.html](https://spark.apache.org/docs/latest/api/python/index.html).
 
+## Spark Create RDD from Seq or List (using Parallelize)
+
+RDD’s are generally created by parallelized collection i.e. by taking an existing collection from driver program (scala, python e.t.c) and passing it to SparkContext’s parallelize() method. <b style="color:red">This method is used only for testing</b> but not in realtime as the entire data will be reside on one node which is not ideal for production.
+
+```scala
+val rdd=spark.sparkContext.parallelize(Seq(("Java", 20000), ("Python", 100000), ("Scala", 3000)))
+rdd.foreach(println)
+```
+Outputs:
+```
+(Python,100000)
+(Scala,3000)
+(Java,20000)
+```
 
 # Troubleshooting
 
