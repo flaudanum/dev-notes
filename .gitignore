@@ -4,5 +4,6 @@
 
 # VSC settings
 .vscode/*
+*.code-workspace
 
 *.db

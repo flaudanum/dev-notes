@@ -13,12 +13,21 @@
   - [Getting Help](#getting-help)
   - [Variables](#variables)
     - [Create a variable](#create-a-variable)
+    - [Create a hash table](#create-a-hash-table)
     - [Getting information about a variable](#getting-information-about-a-variable)
   - [Typing several cmdlets](#typing-several-cmdlets)
-  - [Accessing environment variables](#accessing-environment-variables)
+  - [Environment variables](#environment-variables)
+    - [Accessing environment variables](#accessing-environment-variables)
+    - [Setting an environment variable](#setting-an-environment-variable)
   - [Common cmdlets](#common-cmdlets)
     - [Display a file content](#display-a-file-content)
     - [Remove a file or a directory](#remove-a-file-or-a-directory)
+    - [Get the path of a command (Linux `which`)](#get-the-path-of-a-command-linux-which)
+    - [Copy files and directories](#copy-files-and-directories)
+  - [Formatting strings](#formatting-strings)
+  - [Logical operators](#logical-operators)
+  - [Regular expressions](#regular-expressions)
+    - [Expression matching](#expression-matching)
 - [Solutions to common use cases](#solutions-to-common-use-cases)
   - [Change the location](#change-the-location)
   - [Display the content of a text file](#display-the-content-of-a-text-file)
@@ -26,6 +35,8 @@
   - [Get the content of a directory](#get-the-content-of-a-directory)
   - [Filtering outputs](#filtering-outputs)
   - [Getting the attributes of returned objects](#getting-the-attributes-of-returned-objects)
+  - [Getting the type of an object](#getting-the-type-of-an-object)
+  - [Filtering a string output](#filtering-a-string-output)
   - [Measure the execution time of an application](#measure-the-execution-time-of-an-application)
   - [Running processes](#running-processes)
     - [List of processes](#list-of-processes)
@@ -36,11 +47,16 @@
   - [Redirecting output to null](#redirecting-output-to-null)
   - [Limited script execution policy](#limited-script-execution-policy)
   - [Blocking of downloaded scripts](#blocking-of-downloaded-scripts)
+  - [Execute a command specified in a variable or a string constant](#execute-a-command-specified-in-a-variable-or-a-string-constant)
 - [Scripting](#scripting)
+  - [Commom data types](#commom-data-types)
+  - [Declaration of CLI arguments](#declaration-of-cli-arguments)
   - [Multi-line commands](#multi-line-commands)
   - [Strings with line breaks](#strings-with-line-breaks)
   - [Read input from keyboard](#read-input-from-keyboard)
   - [Testing the existence of a directory or a file](#testing-the-existence-of-a-directory-or-a-file)
+  - [Get the path of the script](#get-the-path-of-the-script)
+  - [Ternary operator](#ternary-operator)
 - [Glossary](#glossary)
 
 Microsoft [official reference](https://docs.microsoft.com/en-us/powershell/).
@@ -66,6 +82,39 @@ Path
 ----
 C:\
 ```
+
+### Create a hash table
+
+A hash table, also known as a *dictionary* or associative array, is a compact *data structure* that stores one or more key/value pairs. 
+
+```PowerShell
+$hash = @{ Number = 1; Shape = "Square"; Color = "Blue"}
+```
+
+A single value for a given key is accessed with the bracket operator or with `.<key>`:
+```PowerShell
+> $hash.Number
+1
+> $hash["Number"]
+1
+```
+The same operators can be used for assigning a new value to an existing key or add a new key-value pair:
+```
+> $hash.Number = 15
+> $hash.city = "Lyon"
+> $hash
+
+Name                           Value
+----                           -----
+Color                          Blue
+Number                         15
+Shape                          Square
+city                           Lyon
+```
+
+The array of keys and values are accessible with properties `keys` and `values`.
+
+More details in the [official documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_hash_tables?view=powershell-7).
 
 ### Getting information about a variable
 
@@ -107,7 +156,9 @@ More information in the [official documentation](https://docs.microsoft.com/en-u
 
 When typing several cmdlets on the same line, use a semi-colon `;` to separate them.
 
-## Accessing environment variables
+## Environment variables
+
+### Accessing environment variables
 The PowerShell environment provider lets you access Windows environment variables in PowerShell in the PowerShell drive `Env:`. This drive looks much like a file system drive, similarly to Linux directory `/proc/` which is not a conventional file folder.
 ```PowerShell
 > Set-Location Env: # or cd Env:
@@ -130,6 +181,19 @@ or w/o the backslash:
 ```
 More information in the [official documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6).
 
+### Setting an environment variable
+Make uses of drive `Env:`:
+```PowerShell
+$env:MyVariable = "A value"
+```
+Then:
+```PowerShell
+> Get-ChildItem env:
+...
+MyVariable                     A value
+...
+```
+
 ## Common cmdlets
 
 ### Display a file content
@@ -146,6 +210,91 @@ The command `Remove-Item` can be used to remove a path element. If it is a non-e
 ```powershell
 > Remove-Item my-file.txt
 > Remove-Item -Recurse .\my-dir\
+```
+
+### Get the path of a command (Linux `which`)
+
+This can be achieved with the cmdlet `Get-Command`.
+
+### Copy files and directories
+
+The `Copy-Item` cmdlet copies an item from one location to another location. This cmdlet doesn't cut or delete the items being copied. It can also be used to make a copy to a remote host.
+
+**Copy a file to the specified directory**
+```PowerShell
+Copy-Item "C:\Wabash\Logfiles\mar1604.log.txt" -Destination "C:\Presentation"
+```
+
+**Copy a file to the specified directory and rename the file**
+```PowerShell
+Copy-Item "\\Server01\Share\Get-Widget.ps1" -Destination "\\Server12\ScriptArchive\Get-Widget.ps1.txt"
+```
+
+**Copy directory contents to an existing directory**
+```PowerShell
+Copy-Item -Path "C:\Logfiles\*" -Destination "C:\Drawings" -Recurse
+```
+
+**Copy a directory to an existing directory**
+```PowerShell
+Copy-Item -Path "C:\Logfiles" -Destination "C:\Drawings" -Recurse
+```
+
+**Copy directory contents to a new directory**
+```PowerShell
+Copy-Item -Path "C:\Logfiles" -Destination "C:\Drawings\NewLogDir" -Recurse
+```
+
+## Formatting strings
+
+Three possible approaches. The first one:
+```
+> [string]$name = ‘Scripting Guy’
+> [string]::Format(“Name = {0}”,$name)
+Name = Scripting Guy
+```
+
+The second with `Format` operator:
+```
+> [string]$name = ‘Scripting Guy’
+> “Name = {0}” -f $name
+Name = Scripting Guy
+```
+
+The third one with an extension string:
+```
+> [string]$name = ‘Scripting Guy’
+> “Name = $name”
+Name = Scripting Guy
+```
+
+See [official doc](https://devblogs.microsoft.com/scripting/understanding-powershell-and-basic-string-formatting/)
+
+
+## Logical operators
+
+Official documentation is [here](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logical_operators?view=powershell-7).
+
+| Operator | Description | Example |
+|---|---|---|
+| `-and` |	Logical AND. TRUE when both statements are TRUE. | `(1 -eq 1) -and (1 -eq 2)` is False |
+| `-or` |	Logical OR. TRUE when either statement is TRUE.|	`(1 -eq 1) -or (1 -eq 2)` is True |
+| `-xor` | 	Logical EXCLUSIVE OR. TRUE when only one statement is TRUE.| `(1 -eq 1) -xor (2 -eq 2)` is False |
+| `-not` |	Logical NOT. Negates the statement that follows.| `-not (1 -eq 1)` is False |
+| `!` |	Same as `-not` |	`!(1 -eq 1)` is False |
+
+## Regular expressions
+
+See [Microsoft documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_regular_expressions?view=powershell-7).
+
+### Expression matching
+
+The logical operator for regular expressions matching is `-match`.
+
+Example:
+
+```powershell
+'Server-01' -match 'Server-\d\d'
 ```
 
 
@@ -196,6 +345,27 @@ d-----       12/18/2019   5:23 PM                MyGreatSoft-Wind-install
 ## Getting the attributes of returned objects
 
 Cmdlets return objects from the same class. Use the command `Get-Member` for getting a list of properties (properties and methods) of the returned objects.
+
+## Getting the type of an object
+
+Objects have a `GetType` method.
+
+```
+> (Get-ChildItem).GetType()
+
+IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     True     Object[]                                 System.Array
+```
+
+## Filtering a string output
+
+Use the cmdlet [`Select-String`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7) 
+with a leading pipe. Example:
+
+```powershell
+'Hello', 'HELLO' | Select-String -Pattern 'HELLO' -CaseSensitive -SimpleMatch
+```
 
 ## Measure the execution time of an application
 
@@ -301,8 +471,54 @@ When a script is download, the user is automatically prompted at each run wether
 Unblock-File -Path c:\path\to\the\downloaded\blocked\script.ps1
 ```
 
+## Execute a command specified in a variable or a string constant
+
+Precede the variable or the string constant with an ampersand `&`:
+```
+PS U:\> $cmd = "Write-Output"
+PS U:\> & $cmd "Hello"
+Hello
+PS U:\> & "Write-Error" "Ouch!"
+& "Write-Error" "Ouch!" : Ouch!
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException
+```
 
 # Scripting
+
+The official Microsoft documentation on script modules is available [here](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/how-to-write-a-powershell-script-module?view=powershell-7).
+
+## Commom data types
+
+|              |                                           |
+|--------------|-------------------------------------------|
+| `[string]`   | Fixed-length string of Unicode characters |
+| `[char]`    |  A Unicode 16-bit character |
+| `[byte]`    |  An 8-bit unsigned character |
+| `[int]`     |  32-bit signed integer |
+| `[long]`    |  64-bit signed integer |
+| `[bool]`    |  Boolean True/False value |
+| `[decimal]`  | A 128-bit decimal value |
+| `[single]`   | Single-precision 32-bit floating point number |
+| `[double]`   | Double-precision 64-bit floating point number |
+| `[DateTime]` | Date and Time |
+| `[xml]`      | Xml object |
+| `[array]`    | An array of values |
+| `[hashtable]`| Hashtable object |
+
+## Declaration of CLI arguments
+
+Use the keyword `param` at the beginning of the script.
+
+In this exemple, parameter `command` is required and must be at position 0 (first argument). Other arguments are optional. The type of arguments is specified in the square bracket expression preceding the name of the parameter. The special type `switch` is for boolean options which do not require an explicit boolean value. If the option is passed to the CLI, the value of the parameter is *true* else *false*.
+
+```powershell
+param (
+    [Parameter(Position=0)][string]$command,
+    [switch]$help,
+    [string]$expirationDate
+)
+```
 
 ## Multi-line commands
 For breaking a command on multiple lines one can use a space followed by the grave accent (backtick):
@@ -348,6 +564,18 @@ Use the cmdlet `Test-Path`.
 if (!(Test-Path -Path $testedPath)) {
     Write-Error "Path '$testedPath' does not exist."
 }
+```
+
+## Get the path of the script
+
+Use the built-in variable `$PSScriptRoot`.
+
+## Ternary operator
+
+PowerShell provides no ternary operator. Nevertheless the same results can provided by using a combination of `if` and `else` statement (like in Python programming).
+
+```PowerShell
+$result = If ($condition) {"true value"} Else {"false value"}
 ```
 
 

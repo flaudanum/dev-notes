@@ -30,6 +30,7 @@ h3 {
     - [Remote branch merging](#remote-branch-merging)
     - [Rebase a branch](#rebase-a-branch)
     - [Solve merge conflicts](#solve-merge-conflicts)
+    - [Merge / Rebase: local, remote, ours, theirs](#merge--rebase-local-remote-ours-theirs)
     - [Suppress a local branch](#suppress-a-local-branch)
     - [Suppress a distant branch](#suppress-a-distant-branch)
   - [Working tree and staging area](#working-tree-and-staging-area)
@@ -346,6 +347,27 @@ $ git push
 ```
 
 It is possible to reset the merging process with the command `git merge --abort` (or `git rebase --abort` if rebasing).
+
+### Merge / Rebase: local, remote, ours, theirs
+```
+git checkout A
+git rebase   B    # rebase A on top of B
+```
+
+- local is B (rebase onto),
+- remote is A
+
+And:
+```
+git checkout A
+git merge    B    # merge B into A
+```
+
+- local is A (merge into),
+- remote is B
+
+A rebase switches **ours** (current branch before rebase starts) and **theirs** (the branch on top of which you want to rebase). 
+
 
 ### Suppress a local branch
 
