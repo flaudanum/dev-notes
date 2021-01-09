@@ -1,6 +1,15 @@
 # Java
 
-# Base package
+- [Java](#java)
+  - [Base package](#base-package)
+  - [Compilation](#compilation)
+  - [Java Archives](#java-archives)
+    - [Create a JAR file](#create-a-jar-file)
+    - [Read the content of a JAR file](#read-the-content-of-a-jar-file)
+- [Glossary](#glossary)
+  - [Anonymous Inner Class in Java](#anonymous-inner-class-in-java)
+
+## Base package
 
 Package `java.lang` provides classes that are fundamental to the design of the Java programming language. For instance it includes base types as `Intger`, `Float`, `String`, etc.
 

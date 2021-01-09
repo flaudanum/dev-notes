@@ -20,6 +20,7 @@ h3 {
   - [Export a local repository to GitLab or GitHub](#export-a-local-repository-to-gitlab-or-github)
   - [Remote repository management](#remote-repository-management)
     - [Set remote of a local repository](#set-remote-of-a-local-repository)
+    - [Update local branches with remote](#update-local-branches-with-remote)
   - [Revert to a previous commit](#revert-to-a-previous-commit)
   - [Reset last commit](#reset-last-commit)
   - [Branch management](#branch-management)
@@ -30,6 +31,8 @@ h3 {
     - [Remote branch merging](#remote-branch-merging)
     - [Rebase a branch](#rebase-a-branch)
     - [Solve merge conflicts](#solve-merge-conflicts)
+    - [Accept all changes](#accept-all-changes)
+    - [Merge / Rebase: local, remote, ours, theirs](#merge--rebase-local-remote-ours-theirs)
     - [Suppress a local branch](#suppress-a-local-branch)
     - [Suppress a distant branch](#suppress-a-distant-branch)
   - [Working tree and staging area](#working-tree-and-staging-area)
@@ -159,6 +162,16 @@ $ git fetch
 From http://gitlab.my-company.com/flaudanum/web-app-proto
  * branch            master     -> FETCH_HEAD
 ```
+
+### Update local branches with remote
+
+Suppose a remote branch was deleted. The command `git fetch --all` will not update the database on the remote repository state in the local repository. Such update is triggered with:
+
+```
+$ git fetch --prune
+```
+
+It removes any remote-tracking references that no longer exist on the remote.
 
 ## Revert to a previous commit
 
@@ -346,6 +359,42 @@ $ git push
 ```
 
 It is possible to reset the merging process with the command `git merge --abort` (or `git rebase --abort` if rebasing).
+
+### Accept all changes
+
+For example if you already know that you want to accept ALL the changes in a file on your **local** branch and discard the other branch’s edits. Instead of opening the file, finding the conflict regions, then making the appropriate changes, you can more succinctly prefer your changes with the following command:
+
+```
+git checkout --ours .
+```
+
+After you’ve finished, stage the the conflict files, and continue your rebase:
+
+```
+git add /path/to/conflict_file.rb
+git rebase --continue
+```
+
+### Merge / Rebase: local, remote, ours, theirs
+```
+git checkout A
+git rebase   B    # rebase A on top of B
+```
+
+- local is B (rebase onto),
+- remote is A
+
+And:
+```
+git checkout A
+git merge    B    # merge B into A
+```
+
+- local is A (merge into),
+- remote is B
+
+A rebase switches **ours** (current branch before rebase starts) and **theirs** (the branch on top of which you want to rebase). 
+
 
 ### Suppress a local branch
 
