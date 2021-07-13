@@ -19,7 +19,7 @@ h1, h2, h3 {
     - [Removing an environment](#removing-an-environment)
     - [Listing environments](#listing-environments)
     - [Activate an environment](#activate-an-environment)
-    - [Installing dependencies](#installing-dependencies)
+    - [Installing / removing dependencies](#installing--removing-dependencies)
     - [Updating dependencies](#updating-dependencies)
     - [Updating conda](#updating-conda)
     - [Listing dependencies](#listing-dependencies)
@@ -87,7 +87,7 @@ demo-api                 C:\Users\frederic.Laudanum\Anaconda3\envs\demo-api
 (my-project)>
 ```
 
-### Installing dependencies
+### Installing / removing dependencies
 
 The dependencies to install can be specified as CLI arguments:
 
@@ -99,6 +99,12 @@ or from a text file:
 
 ```
 conda install --file requirements.txt
+```
+
+Uninstall dependencies:
+
+```
+conda remove <pacakge0>[=,>=,<=,>,<]<version> ...
 ```
 
 ### Updating dependencies

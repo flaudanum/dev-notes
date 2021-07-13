@@ -56,8 +56,10 @@
 - [Scripting](#scripting)
   - [Commom data types](#commom-data-types)
   - [Declaration of CLI arguments](#declaration-of-cli-arguments)
+  - [Declare a variable](#declare-a-variable)
   - [Multi-line commands](#multi-line-commands)
   - [Strings with line breaks](#strings-with-line-breaks)
+  - [Terminating a script with status](#terminating-a-script-with-status)
   - [Read input from keyboard](#read-input-from-keyboard)
   - [Testing the existence of a directory or a file](#testing-the-existence-of-a-directory-or-a-file)
   - [Get the path of the script](#get-the-path-of-the-script)
@@ -652,6 +654,20 @@ param (
 )
 ```
 
+## Declare a variable
+
+The syntax for declaring a variable with the specified type is:
+
+```
+[<type>]$<variable name> [= <value>]
+```
+
+Example:
+
+```
+[int]$num=101
+```
+
 ## Multi-line commands
 
 For breaking a command on multiple lines one can use a space followed by the grave accent (backtick):
@@ -688,6 +704,14 @@ Use `` "`n" ``.
 
 ```powershell
 echo "This text is followed by a linebreak`n"
+```
+
+## Terminating a script with status
+
+Use the `exit` _keyword_:
+
+```PowerShell
+exit 1
 ```
 
 ## Read input from keyboard
