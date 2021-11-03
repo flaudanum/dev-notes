@@ -13,7 +13,7 @@ Le package `build-essential` installe le comilateur C `gcc`.
 Libraires optionnelles à intégrer:
 
 ```
-apt-get install libbz2-dev liblzma-dev
+apt-get install libbz2-dev liblzma-dev libsqlite3-dev
 ```
 
 Setup de la compilation avec création d'un Makefile:

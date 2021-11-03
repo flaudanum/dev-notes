@@ -16,6 +16,9 @@ h3 {
 
 - [Git notes](#git-notes)
   - [Configuration](#configuration)
+    - [Listing settings](#listing-settings)
+    - [Add/modify settings](#addmodify-settings)
+    - [Set aliases](#set-aliases)
   - [Clone repositories](#clone-repositories)
     - [Clone a branch that is different from the default one](#clone-a-branch-that-is-different-from-the-default-one)
   - [Export a local repository to GitLab or GitHub](#export-a-local-repository-to-gitlab-or-github)
@@ -54,17 +57,33 @@ h3 {
 
 ## Configuration
 
+### Listing settings
+
 List configuration:
 
 ```
 git config --list
 ```
 
+### Add/modify settings
+
 Set the global settings for properties _user_ and _email_:
 
 ```
 git config --global user.name "Frédéric LAUDARIN"
 git config --global user.email "friedrich.laudanum@my-email.com"
+```
+
+### Set aliases
+
+```
+git config --global alias.<alias' identifier> <expression>
+```
+
+Example
+
+```
+git config --global alias.lg1 "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all"
 ```
 
 ## Clone repositories
