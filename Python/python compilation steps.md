@@ -1,3 +1,11 @@
+<h1>Compiling the Python interpreter</h1>
+
+## Libraries on Ubuntu
+If necessary install some system utilities:
+```
+sudo apt install curl wget llvm 
+```
+
 ```
 sudo su -
 mkdir /opt/apps
@@ -13,8 +21,10 @@ Le package `build-essential` installe le comilateur C `gcc`.
 Libraires optionnelles à intégrer:
 
 ```
-apt-get install libbz2-dev liblzma-dev libsqlite3-dev
+apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev
 ```
+
+## Compilation
 
 Setup de la compilation avec création d'un Makefile:
 
