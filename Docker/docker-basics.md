@@ -1,27 +1,32 @@
-# Docker notes
+<h1>Docker notes</h1>
 
-- [Docker notes](#docker-notes)
-  - [Install Docker desktop](#install-docker-desktop)
-  - [Basic operations](#basic-operations)
-    - [Run a container](#run-a-container)
-    - [Redirect a port](#redirect-a-port)
-    - [Bash inside a running container](#bash-inside-a-running-container)
-    - [Run an image and Bash inside by overwriting the entry point](#run-an-image-and-bash-inside-by-overwriting-the-entry-point)
-    - [Stop a container](#stop-a-container)
-    - [Remove containers, images and build cache](#remove-containers-images-and-build-cache)
-    - [List the local containers](#list-the-local-containers)
-  - [Docker hub](#docker-hub)
-    - [Download a docker hub container image](#download-a-docker-hub-container-image)
-  - [Dockerfile](#dockerfile)
-    - [FROM](#from)
-    - [RUN](#run)
-    - [ADD](#add)
-    - [EXPOSE](#expose)
-    - [VOLUME](#volume)
-    - [CMD](#cmd)
-    - [COPY vs ADD](#copy-vs-add)
-  - [Issues](#issues)
-    - [No time sync](#no-time-sync)
+- [Install Docker desktop](#install-docker-desktop)
+- [Basic operations](#basic-operations)
+  - [Create an image](#create-an-image)
+  - [Run a container](#run-a-container)
+  - [Redirect a port](#redirect-a-port)
+  - [Bash inside a running container](#bash-inside-a-running-container)
+  - [Run an image and Bash inside by overwriting the entry point](#run-an-image-and-bash-inside-by-overwriting-the-entry-point)
+  - [Stop a container](#stop-a-container)
+  - [Remove containers, images and build cache](#remove-containers-images-and-build-cache)
+  - [List the local containers](#list-the-local-containers)
+- [Networking](#networking)
+  - [Listing networks](#listing-networks)
+  - [IP address of a container](#ip-address-of-a-container)
+  - [Removing a network](#removing-a-network)
+- [Docker hub](#docker-hub)
+  - [Log to Docker Hub](#log-to-docker-hub)
+  - [Download a docker hub container image](#download-a-docker-hub-container-image)
+- [Dockerfile](#dockerfile)
+  - [FROM](#from)
+  - [RUN](#run)
+  - [ADD](#add)
+  - [EXPOSE](#expose)
+  - [VOLUME](#volume)
+  - [CMD](#cmd)
+  - [COPY vs ADD](#copy-vs-add)
+- [Issues](#issues)
+  - [No time sync](#no-time-sync)
 
 ## Install Docker desktop
 
@@ -60,6 +65,15 @@ For more examples and ideas, visit:
 The container is identified by the *digest* `sha256` hash value.
 
 ## Basic operations
+
+
+### Create an image
+
+This command builds an image tagged as `data-main` from the file `./kubernetes/dockerfile`.
+
+```
+docker build --tag data-main ./kubernetes/
+```
 
 ### Run a container
 ```
@@ -110,6 +124,13 @@ Remove a container with command `docker rm` and the ID of the container:
 ```
 > docker rm 451ce787d12369c5df2a32c85e5a03d52cbcef6eb3586dd03075f3034f10ad
 ```
+
+Remove all containers
+
+```
+docker ps -a | xargs docker rm
+```
+
 Remove an image with `docker rmi`.
 
 For removing:
@@ -144,7 +165,50 @@ docker images -a
 ```
 The option `-a` stands for all.
 
+## Networking
+
+### Listing networks
+This command lists the available Docker networks:
+```
+docker network ls
+```
+
+List all networks a container belongs to
+```
+docker inspect -f '{{range $key, $value := .NetworkSettings.Networks}}{{$key}} {{end}}' <container's ID or name>
+```
+
+List all containers belonging to a network by name
+```
+docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' <network>
+```
+
+### IP address of a container
+
+```
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container's ID or name>
+```
+
+### Removing a network
+
+```
+docker network rm <network's ID or name>
+```
+
 ## Docker hub
+
+### Log to Docker Hub
+On Windows you can sign in to _Docker Hub_ from _Docker Desktop_ UI. On Linux OS use `docker login`:
+
+```
+$ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: <Docker ID>
+Password: <Password>
+WARNING! Your password will be stored unencrypted in /home/<user>/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+```
 
 ### Download a docker hub container image
 
