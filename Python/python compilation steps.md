@@ -20,9 +20,16 @@ Le package `build-essential` installe le comilateur C `gcc`.
 
 Libraires optionnelles à intégrer:
 
+_Ubuntu_
 ```
 apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev
 ```
+
+_Fedora_
+```
+dnf install bzip2-devel.x86_64 ncurses-devel.x86_64 libffi-devel.x86_64 readline-devel.x86_64 libsqlite3x-devel.x86_64 xz-devel.x86_64
+```
+For `tkinter` installing `python3-tkinter.x86_64` should be enough.
 
 ## Compilation
 
