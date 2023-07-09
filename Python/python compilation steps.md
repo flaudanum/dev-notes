@@ -22,7 +22,7 @@ Libraires optionnelles à intégrer:
 
 _Ubuntu_
 ```
-apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev
+apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libreadline8 libreadline-dev
 ```
 
 _Fedora_
